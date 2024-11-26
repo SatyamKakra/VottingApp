@@ -22,7 +22,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   
 	try {
 	  // Send POST request to login API
-	  const response = await fetch('http://192.168.1.6:3000/user/login', {
+	  const response = await fetch('http://192.168.1.28:3000/user/login', {
 		method: 'POST',
 		headers: {
 		  'Content-Type': 'application/json',

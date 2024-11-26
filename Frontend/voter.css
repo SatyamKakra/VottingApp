@@ -1,5 +1,5 @@
 /* General table styling */
-#candidate-table {
+#voter-table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
@@ -7,14 +7,14 @@
     text-align: left;
 }
 
-#candidate-table th,
-#candidate-table td {
+#voter-table th,
+#voter-table td {
     border: 1px solid #ddd;
     padding: 12px;
 }
 
 /* Header styling */
-#candidate-table thead th {
+#voter-table thead th {
     background-color: #4CAF50;
     color: white;
     text-transform: uppercase;
@@ -22,23 +22,23 @@
 }
 
 /* Alternating row colors */
-#candidate-table tbody tr:nth-child(even) {
+#voter-table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-#candidate-table tbody tr:nth-child(odd) {
+#voter-table tbody tr:nth-child(odd) {
     background-color: #ffffff;
 }
 
 /* Hover effect for rows */
-#candidate-table tbody tr:hover {
+#voter-table tbody tr:hover {
     background-color: #f1f1f1;
     cursor: pointer;
 }
 
 /* Button styling */
-#candidate-table .update-btn,
-#candidate-table .delete-btn {
+#voter-table .update-btn,
+#voter-table .delete-btn {
     display: inline-block;
     padding: 5px 10px;
     font-size: 14px;
@@ -50,19 +50,19 @@
 }
 
 /* Update button */
-#candidate-table .update-btn {
+#voter-table .update-btn {
     background-color: #28a745;
 }
 
-#candidate-table .update-btn:hover {
+#voter-table .update-btn:hover {
     background-color: #218838;
 }
 
 /* Delete button */
-#candidate-table .delete-btn {
+#voter-table .delete-btn {
     background-color: #dc3545;
 }
 
-#candidate-table .delete-btn:hover {
+#voter-table .delete-btn:hover {
     background-color: #c82333;
 }

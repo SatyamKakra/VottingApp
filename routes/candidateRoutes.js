@@ -57,7 +57,7 @@ router.get('/allCandidate', jwtAuthMiddleware, async (req,res) => {
     }
 })
 
-//   update 
+//   update candidate
 router.put('/:candidateId', jwtAuthMiddleware,  async (req,res) => {
     try{
         if(!(await checkAdminRole(req.user.id)))
@@ -164,6 +164,8 @@ console.log("record", voteRecord)
         res.status(500).json({error: 'Intrnal Server Error'})
     }
 })
+
+
 
 
   module.exports = router;

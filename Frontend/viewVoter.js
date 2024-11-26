@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const table = document.querySelector('#candidate-table');
+    const table = document.querySelector('#voter-table');
     const token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
     if (!token) {
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    fetch('http://192.168.1.28:3000/candidate/allCandidate', {
+    fetch('http://192.168.1.28:3000/user/allVoter', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -17,45 +17,50 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => {
             console.log("response", response);
             if (!response.ok) {
-                throw new Error('Failed to fetch candidates.');
+                throw new Error('Failed to fetch voter.');
             }
             return response.json();
         })
         .then(data => {
-            if (data.length === 0) {
+            console.log("data", data);
+            if (data.user.length === 0) {
                 const emptyRow = table.insertRow();
                 const cell = emptyRow.insertCell();
-                cell.colSpan = 7;
-                cell.textContent = 'No candidates available.';
+                cell.colSpan = 9;
+                cell.textContent = 'No voters available.';
                 cell.style.textAlign = 'center';
             } else {
-                data.forEach((candidate, index) => {
+                data.user.forEach((voter, index) => {
                     const row = table.insertRow();
                     const serialCell = row.insertCell(0);
-                    serialCell.textContent = index + 1;
-                    // row.insertCell(1).textContent = candidate._id;
-                    row.insertCell(1).textContent = candidate.name;
-                    row.insertCell(2).textContent = candidate.age;
-                    row.insertCell(3).textContent = candidate.party;
-                    row.insertCell(4).textContent = candidate.voteCount;
+                    serialCell.textContent = index + 1; // Serial number starts from 1
+
+                    // row.insertCell(1).textContent = voter._id;
+                    row.insertCell(1).textContent = voter.name;
+                    row.insertCell(2).textContent = voter.age;
+                    row.insertCell(3).textContent = voter.email;
+                    row.insertCell(4).textContent = voter.mobile;
+                    row.insertCell(5).textContent = voter.address;
+                    row.insertCell(6).textContent = voter.aadharCardNumber;
+                    row.insertCell(7).textContent = voter.isVoted;
 
                     // Update Button
-                    const updateCell = row.insertCell(5);
+                    const updateCell = row.insertCell(8);
                     const updateButton = document.createElement('button');
                     updateButton.textContent = 'Update';
                     updateButton.addEventListener('click', () => {
-                        window.location.href = `Update.html?id=${candidate._id}`;
+                        window.location.href = `UpdateVoter.html?id=${voter._id}`;
                     });
                     updateCell.appendChild(updateButton);
 
                     // Delete Button
-                    const deleteCell = row.insertCell(6);
+                    const deleteCell = row.insertCell(9);
                     const deleteButton = document.createElement('button');
                     deleteButton.textContent = 'Delete';
                     deleteButton.addEventListener('click', () => {
                         Swal.fire({
                             title: 'Are you sure?',
-                            text: `Do you really want to delete ${candidate.name}?`,
+                            text: `Do you really want to delete ${voter.name}?`,
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#3085d6',
@@ -63,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             confirmButtonText: 'Yes, delete it!',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                fetch(`http://192.168.1.28:3000/candidate/${candidate._id}`, {
+                                fetch(`http://192.168.1.28:3000/user/${voter._id}`, {
                                     method: 'DELETE',
                                     headers: {
                                         'Content-Type': 'application/json',
@@ -72,11 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 })
                                     .then(response => {
                                         if (!response.ok) {
-                                            throw new Error('Failed to delete candidate.');
+                                            throw new Error('Failed to delete voter.');
                                         }
                                         Swal.fire(
                                             'Deleted!',
-                                            `${candidate.name} has been deleted.`,
+                                            `${voter.name} has been deleted.`,
                                             'success'
                                         ).then(() => {
                                             // Reload table after deletion
@@ -87,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         console.error('Error:', error);
                                         Swal.fire(
                                             'Error!',
-                                            'Failed to delete the candidate. Please try again.',
+                                            'Failed to delete the voter. Please try again.',
                                             'error'
                                         );
                                     });
@@ -100,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to load candidates. Please try again later.');
+            alert('Failed to load voters. Please try again later.');
         });
 });
 

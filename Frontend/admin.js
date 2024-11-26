@@ -11,6 +11,16 @@ signInButton.addEventListener('click', () => {
 });
 
 
+document.getElementById("viewCandidate").addEventListener("click", function() {
+    // Navigate to the desired page
+    window.location.href = "viewCandidate.html";
+  });
+
+document.getElementById("viewVoter").addEventListener("click", function() {
+    // Navigate to the desired page
+    window.location.href = "viewVoter.html";
+  });
+
 // sign up api start
 document.getElementById('signUpForm').addEventListener('submit', async function(event) {
     event.preventDefault(); // Prevent the default form submission
@@ -25,7 +35,7 @@ document.getElementById('signUpForm').addEventListener('submit', async function(
     const token = localStorage.getItem('token');
     try {
         // Send a POST request to your signup API
-        const response = await fetch('http://192.168.1.6:3000/user/signup', {
+        const response = await fetch('http://192.168.1.28:3000/user/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,12 +48,14 @@ document.getElementById('signUpForm').addEventListener('submit', async function(
         if (response.ok) {
             const result = await response.json();
             console.log('Signup successful:', result);
-            alert('Signup successful!');
+            // alert('Signup successful!');
+            Swal.fire('Success!', 'Signup successful!', 'success');
             // You can redirect the user or show a success message here
         } else {
             const error = await response.json();
             console.error('Signup failed:', error);
-            alert(data.error || 'Signup failed!');
+            // alert(data.error || 'Signup failed!');
+            Swal.fire('Error!', data.error || 'Signup failed!', 'error');
             // Handle errors here
         }
     } catch (error) {
@@ -67,7 +79,7 @@ document.getElementById('addCandidateForm').addEventListener('submit', async fun
     const token = localStorage.getItem('token');
     try {
         // Send a POST request to your signup API
-        const response = await fetch('http://192.168.1.6:3000/candidate', {
+        const response = await fetch('http://192.168.1.28:3000/candidate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,12 +92,14 @@ document.getElementById('addCandidateForm').addEventListener('submit', async fun
         if (response.ok) {
             const result = await response.json();
             console.log('Candidate Add successful:', result);
-            alert('Created successful!');
+            // alert('Created successful!');
+            Swal.fire('Success!', 'Candidate created successful!', 'success');
             // You can redirect the user or show a success message here
         } else {
             const error = await response.json();
             console.error('Add failed:', error);
-            alert(data.error || 'Creation failed!');
+            // alert(data.error || 'Creation failed!');
+            Swal.fire('Error!', data.error || 'Creation failed!', 'error');
             // Handle errors here
         }
     } catch (error) {

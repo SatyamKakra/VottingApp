@@ -14,7 +14,7 @@ async function submitVote() {
 
     if (selectedCandidateId) {
         try {
-            const response = await fetch(`http://192.168.1.6:3000/candidate/vote/${selectedCandidateId}`, {
+            const response = await fetch(`http://192.168.1.28:3000/candidate/vote/${selectedCandidateId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 // const token = 'YOUR_TOKEN_HERE'; // Replace with your actual token
 
 function fetchCandidates() {
-    fetch('http://192.168.1.6:3000/candidate/allCandidate', {
+    fetch('http://192.168.1.28:3000/candidate/allCandidate', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YWY3ODJlODVmMjdmYjZhNzI0NDBjZiIsImlhdCI6MTcyMzAyMTI0NywiZXhwIjoxNzIzMDUxMjQ3fQ.T1Qz32KqO1ZKwp2F83hDXO_DpaDPRh1Ck8xCo-T6Wno'}`,

@@ -5,6 +5,20 @@ const User = require('../models/user');
 const {jwtAuthMiddleware, generateToken, checkAuthForAdmin, verifyJwtToken} = require('./../jwt');
 const { json } = require('body-parser');
 const nodemailer = require('nodemailer');
+const twilio = require('twilio');
+
+const checkAdminRole = async (userId) => {
+  try{
+      const user = await User.findById(userId);
+      if(user.role === 'admin'){
+          return true;
+      }
+
+  }catch(err){
+      return false;
+
+  }
+}
 // post route to add a User
 // router.post('/signup',jwtAuthMiddleware, checkAuthForAdmin, async (req,res) => {
 //     try{
@@ -74,6 +88,18 @@ router.post('/signup', jwtAuthMiddleware, checkAuthForAdmin, async (req, res) =>
 
     await transporter.sendMail(mailOptions);
     console.log('Welcome email sent');
+
+    // send whatsapp message
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+    await client.messages.create({
+      from: 'whatsapp:+17433302939', // Replace with your Twilio WhatsApp-enabled number
+      to: `whatsapp:${data.mobile}`, // User's phone number from the request body in international format
+      body: `Hi ${data.name},\n\nWelcome to Our App! Your account has been successfully created.\n\nBest regards,\nSatyam Kakra`,
+    });
+
+    console.log('WhatsApp message sent');
+
 
     res.status(200).json({ response: response, token: token, message: 'User created and email sent successfully!' });
   } catch (err) {
@@ -193,6 +219,31 @@ router.delete('/:userId', jwtAuthMiddleware, async (req,res) => {
       res.status(500).json({ error: 'Internal Server Error' });
   }
 
+})
+
+//   update voter
+router.put('/:voterId', jwtAuthMiddleware,  async (req,res) => {
+  try{
+      if(!(await checkAdminRole(req.user.id)))
+          return res.status(403).json({message: 'user does not have admin role'})
+      const voterId = req.params.voterId; //extract the id from the url parameter
+      const updatedVoterData = req.body; // updated data for the person
+console.log("voter id is: ",voterId);
+console.log("updatedVoterData id is: ",updatedVoterData);
+      const response = await User.findByIdAndUpdate(voterId, updatedVoterData, {
+          new: true, // return the updated document
+          runValidators: true // run mongoose validation
+      })
+      if(!response){
+          return res.status(404).json({error: 'voter not found'});
+      }
+      console.log('voter data updated')
+      res.status(200).json(response);
+  }catch(err){
+      console.log(err);
+      res.status(500).json({error: 'Intrnal Server Error'})
+
+  }
 })
 
   module.exports = router;
