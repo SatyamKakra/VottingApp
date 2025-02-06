@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileInput = document.querySelector('#mobile');
     const addressInput = document.querySelector('#address');
     const aadharCardNumberInput = document.querySelector('#aadharCardNumber');
-    const isVotedInput = document.querySelector('#isVoted');
+    // const isVotedInput = document.querySelector('#isVoted');
 
     const urlParams = new URLSearchParams(window.location.search);
     const voterId = urlParams.get('id');
@@ -47,15 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Voter not found.');
                 return;
             }
-
+            let mobileNumber = voter.mobile.startsWith('+') ? voter.mobile.substring(1) : voter.mobile;
             // Populate the form with the voter's data
             nameInput.value = voter.name;
             ageInput.value = voter.age;
             emailInput.value = voter.email;
-            mobileInput.value = voter.mobile;
+            mobileInput.value = mobileNumber;
             addressInput.value = voter.address;
             aadharCardNumberInput.value = voter.aadharCardNumber;
-            isVotedInput.value = voter.isVoted;
+            // isVotedInput.value = voter.isVoted;
         })
         .catch(error => {
             console.error('Error:', error);

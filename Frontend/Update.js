@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nameInput = document.querySelector('#name');
     const ageInput = document.querySelector('#age');
     const partyInput = document.querySelector('#party');
-    const voteCountInput = document.querySelector('#voteCount');
+    // const voteCountInput = document.querySelector('#voteCount');
 
     const urlParams = new URLSearchParams(window.location.search);
     const candidateId = urlParams.get('id');
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nameInput.value = candidate.name;
             ageInput.value = candidate.age;
             partyInput.value = candidate.party;
-            voteCountInput.value = candidate.voteCount;
+            // voteCountInput.value = candidate.voteCount;
         })
         .catch(error => {
             console.error('Error:', error);
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: nameInput.value,
             age: parseInt(ageInput.value, 10), // Ensure age is a number
             party: partyInput.value,
-            voteCount: parseInt(voteCountInput.value, 10), // Ensure voteCount is a number
+            // voteCount: parseInt(voteCountInput.value, 10), // Ensure voteCount is a number
         };
 
         fetch(`http://192.168.1.28:3000/candidate/${candidateId}`, {

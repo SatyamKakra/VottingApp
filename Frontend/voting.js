@@ -2,6 +2,9 @@ async function submitVote() {
     const candidates = document.getElementsByName('vote');
     let selectedCandidateId = null;
 
+    console.log("candidates", candidates);
+
+    // Find the selected candidate
     for (const candidate of candidates) {
         if (candidate.checked) {
             selectedCandidateId = candidate.id; // Get the ID of the selected candidate
@@ -11,6 +14,8 @@ async function submitVote() {
     }
 
     const confirmationElement = document.getElementById('confirmation');
+    const token = localStorage.getItem('token');
+    console.log(token);
 
     if (selectedCandidateId) {
         try {
@@ -18,19 +23,25 @@ async function submitVote() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjI1MmFmMmU5YTQwNzNhNzA1Y2Q1OSIsImlhdCI6MTcyMzAzNzQ1MywiZXhwIjoxNzIzMDY3NDUzfQ.waXQRNOL-04mLuabZXGBXE7kqL9EPKjfpfJf9x8X5Ws'}`,
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({ candidateId: selectedCandidateId })
             });
 
+            const result = await response.json();
+
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                // Display the error message from the API
+                console.error('Error submitting vote:', result.message || 'Unknown error');
+                confirmationElement.innerText = `Error: ${result.message || 'An error occurred while submitting your vote.'}`;
+                return;
             }
 
-            const result = await response.json();
+            console.log('Vote submitted successfully:', result);
             confirmationElement.innerText = `Vote submitted successfully!`;
         } catch (error) {
-            confirmationElement.innerText = `Error submitting vote: ${error.message}`;
+            console.error('Error submitting vote:', error);
+            confirmationElement.innerText = `Error submitting vote: ${error.message || 'An unexpected error occurred.'}`;
         }
     } else {
         confirmationElement.innerText = 'Please select a candidate to vote.';
@@ -39,11 +50,12 @@ async function submitVote() {
 
 
 
+
 document.addEventListener('DOMContentLoaded', (event) => {
     fetchCandidates();
 });
 
-const token = 'YOUR_TOKEN_HERE'; // Replace with your actual token
+const token = localStorage.getItem('token');; // Replace with your actual token
 
 document.addEventListener('DOMContentLoaded', (event) => {
     fetchCandidates();
@@ -55,30 +67,41 @@ function fetchCandidates() {
     fetch('http://192.168.1.28:3000/candidate/allCandidate', {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YWY3ODJlODVmMjdmYjZhNzI0NDBjZiIsImlhdCI6MTcyMzAyMTI0NywiZXhwIjoxNzIzMDUxMjQ3fQ.T1Qz32KqO1ZKwp2F83hDXO_DpaDPRh1Ck8xCo-T6Wno'}`,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
-        displayCandidates(data);
+        console.log('API Response:', data); // Debugging log
+        displayCandidates(data || []); // Use data.candidates if the API nests candidates
     })
     .catch(error => {
         console.error('Error fetching candidates:', error);
     });
 }
 
+
 function displayCandidates(candidates) {
+    if (!Array.isArray(candidates)) {
+        console.error('Expected an array but received:', candidates);
+        return;
+    }
+
     const container = document.getElementById('candidatesContainer');
+    console.log('candidates', candidates);
     container.innerHTML = ''; // Clear existing content
 
-    // Map of party IDs to image URLs
     const partyImages = {
         BJP: './images/BJP.jpg',
         INC: './images/Congress.svg',
         AAP: './images/aap.jpg',
         SP: './images/Sp.png',
-        // Add more parties and their logos here
     };
 
     candidates.forEach(candidate => {
@@ -90,16 +113,14 @@ function displayCandidates(candidates) {
         input.id = candidate._id;
         input.name = 'vote';
         input.value = candidate.name;
-       
 
         const img = document.createElement('img');
-        // Use the party ID to get the appropriate image URL
-        img.src = partyImages[candidate.party] || './images/BJP.jpg';
-        img.alt = `Party Logo ${candidate.id}`;
+        img.src = partyImages[candidate.party] || './images/default.jpg';
+        img.alt = `Party Logo ${candidate.party}`;
         img.classList.add('party-logo');
 
         const label = document.createElement('label');
-        label.htmlFor = `candidate${candidate.id}`;
+        label.htmlFor = candidate._id;
         label.textContent = candidate.name;
 
         candidateDiv.appendChild(input);
@@ -108,3 +129,4 @@ function displayCandidates(candidates) {
         container.appendChild(candidateDiv);
     });
 }
+

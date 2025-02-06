@@ -45,7 +45,8 @@ router.post('/', jwtAuthMiddleware, async  (req,res) => {
   
 
 // get all candidates
-router.get('/allCandidate', jwtAuthMiddleware, async (req,res) => {
+// router.get('/allCandidate', jwtAuthMiddleware, async (req,res) => {
+router.get('/allCandidate', async (req,res) => {
     try{
         const candidate = await Candidate.find();
         res.status(200).json(candidate);
@@ -103,22 +104,26 @@ router.delete('/:candidateId', jwtAuthMiddleware,  async (req,res) => {
 })
 
 // lets start vote
-router.get('/vote/:candidateID', jwtAuthMiddleware, async (req, res)=>{
+router.post('/vote/:candidateID', jwtAuthMiddleware, async (req, res)=>{
     // no admin can vote
     // user can only vote once
     
-    candidateID = req.params.candidateID;
-    userId = req.user.id;
-
+   const candidateID = req.params.candidateID;
+   const userId = req.user.id;
+   console.log("candidate id is: ",candidateID);
+console.log("user id is: ",userId)
     try{
         // Find the Candidate document with the specified candidateID
         const candidate = await Candidate.findById(candidateID);
+        console.log("candidate is: ",candidate);
         if(!candidate){
+            console.log("candidate not found");
             return res.status(404).json({ message: 'Candidate not found' });
         }
 
         const user = await User.findById(userId);
         if(!user){
+            console.log("user not found");
             return res.status(404).json({ message: 'user not found' });
         }
         if(user.role == 'admin'){

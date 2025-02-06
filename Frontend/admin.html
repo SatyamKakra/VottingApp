@@ -15,9 +15,9 @@
                 <span>or use your email for registration</span>
                 <input type="text" name="name" id="name" placeholder="Name"/>
                 <input type="text" name="age" id="age" placeholder="Age"/>
-                <input type="text" name="mobile" id="mobile" placeholder="Mobile"/>
+                <input type="text" name="mobile" id="mobile" minlength="10" maxlength="10" placeholder="Mobile"/>
                 <input type="text" name="address" id="address" placeholder="Address"/>
-                <input type="text" name="aadharCardNumber" id="aadharCardNumber" placeholder="Aadhar No."/>
+                <input type="text" name="aadharCardNumber" id="aadharCardNumber" minlength="12" maxlength="12" placeholder="Aadhar No."/>
                 <input type="email" name="email" id="email" placeholder="Email"/>
                 <input type="password" name="password" id="password" placeholder="Password"/>
                 <input type="text" name="role" id="role" placeholder="Role"/>
@@ -35,6 +35,10 @@
                 <input type="text" name="age" id="ageCandidate" placeholder="Age" />
 
                 <button type="submit">Create</button>
+                 <!-- Logout Button -->
+    <div class="logout-container">
+        <button id="logout">Logout</button>
+    </div>
             </form>
         </div>
         <div class="overlay-container">
@@ -50,6 +54,7 @@
                     <p>Create your Candidate and let's start Election</p>
                     <button class="ghost" id="signUp">Sign Up</button>
                     <button class="ghost" id="viewCandidate" style="margin-top: 5px;">View Candidate</button>
+                    <button class="ghost" id="changePassword" style="margin-top: 5px;">Change Password</button>
                 </div>
             </div>
         </div>

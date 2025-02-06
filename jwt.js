@@ -2,35 +2,58 @@ const jwt = require('jsonwebtoken');
 const userModel = require('./models/user')
 // const {jwtAuthMiddleware, generateToken, checkAuthForAdmin, verifyJwtToken} = require('.');
 
+// const jwtAuthMiddleware = async (req, res, next) => {
+
+//     // first check request headers has authoruzation or not
+//     const authorization = req.headers.authorization
+//     if(!authorization) return res.status(401).json({error: 'Token not found'});
+
+//     // extract the jwt token from the request headers
+//     const token = req.headers.authorization.split(' ')[1];
+//     if(!token) return res.status(401).json({error: 'Unauthorized'});
+
+
+
+//     try{
+//         // verify the jwt token
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+//         // Attach user information to the request object
+//         req.user = decoded
+//         console.log("decode",decoded);
+//         const user = await userModel.findById(decoded.id);
+//         if (user.role !== 'admin') {
+//             return res.status(403).json({ error: 'Forbidden: Admins only' });
+//           }
+//         next();
+//     }catch(err){
+//         console.log(err);
+//         res.status(401).json({error: 'Invalid Token'});
+//     }
+// }
 const jwtAuthMiddleware = async (req, res, next) => {
+    // Check if the Authorization header exists
+    const authorization = req.headers.authorization;
+    if (!authorization) return res.status(401).json({ error: 'Token not found' });
 
-    // first check request headers has authoruzation or not
-    const authorization = req.headers.authorization
-    if(!authorization) return res.status(401).json({error: 'Token not found'});
+    // Extract the JWT token from the Authorization header
+    const token = authorization.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
 
-    // extract the jwt token from the request headers
-    const token = req.headers.authorization.split(' ')[1];
-    if(!token) return res.status(401).json({error: 'Unauthorized'});
-
-
-
-    try{
-        // verify the jwt token
+    try {
+        // Verify the JWT token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         // Attach user information to the request object
-        req.user = decoded
-        console.log("decode",decoded);
-        const user = await userModel.findById(decoded.id);
-        if (user.role !== 'admin') {
-            return res.status(403).json({ error: 'Forbidden: Admins only' });
-          }
-        next();
-    }catch(err){
-        console.log(err);
-        res.status(401).json({error: 'Invalid Token'});
+        req.user = decoded;
+
+        console.log("Decoded token:", decoded);
+        next(); // Proceed to the next middleware or route handler
+    } catch (err) {
+        console.error(err);
+        res.status(401).json({ error: 'Invalid Token' });
     }
-}
+};
 
 
 // var checkAuth = async (req, res, next) => {

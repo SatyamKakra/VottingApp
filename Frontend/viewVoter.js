@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     row.insertCell(4).textContent = voter.mobile;
                     row.insertCell(5).textContent = voter.address;
                     row.insertCell(6).textContent = voter.aadharCardNumber;
-                    row.insertCell(7).textContent = voter.isVoted;
+                    row.insertCell(7).textContent = voter.isVoted ? 'Yes' : 'No';
 
                     // Update Button
                     const updateCell = row.insertCell(8);

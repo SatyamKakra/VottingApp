@@ -41,12 +41,15 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 		console.log("role",role)
 		console.log("token",token)
 
+		Swal.fire('Success!', 'Login successful!', 'success' ).then(() => {
 		if (role === 'admin') {
 		  window.location.href = 'http://127.0.0.1:5500/Frontend/admin.html';
 		} else {
-		  window.location.href = 'http://127.0.0.1:5500/Frontend/voting.html';
+		  window.location.href = 'http://127.0.0.1:5500/Frontend/profile.html';
 		}
-		Swal.fire('Success!', 'Login successful!', 'success');
+			// Redirect to login page
+
+		});
 		// alert('Login successful!');
 	  } else {
 		// Handle errors (e.g., display error message)
@@ -61,3 +64,42 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   });
 
   // login api end
+
+//   forgot password api start 
+document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+    e.preventDefault(); // Prevent default link behavior
+
+    // Prompt the user to enter their email
+    const email = prompt('Please enter your email address to reset your password:');
+    
+    if (email) {
+        // Call the Forgot Password API
+        forgotPassword(email);
+    } else {
+        alert('Email is required to reset your password.');
+    }
+});
+
+async function forgotPassword(email) {
+    try {
+        const response = await fetch('http://127.0.0.1:3000/user/forgot-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }), // Send the email in the request body
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            alert(result.message || 'Password reset email sent successfully.');
+        } else {
+            const error = await response.json();
+            alert(error.error || 'Failed to send password reset email.');
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        alert('An error occurred. Please try again later.');
+    }
+}
+
